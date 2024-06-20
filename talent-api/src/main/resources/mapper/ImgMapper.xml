@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.talent.dao.ImgDao">
+    <resultMap id="imgMap" type="Img">
+        <id property="imgId" column="imgId"></id>
+        <result property="img1" column="img1"></result>
+        <result property="img2" column="img2"></result>
+        <result property="img3" column="img3"></result>
+        <result property="img4" column="img4"></result>
+        <result property="img5" column="img5"></result>
+    </resultMap>
+    <!-- id查询 -->
+    <select id="queryById" parameterType="int" resultMap="imgMap">
+        select *
+        from tb_img i
+        where i.imgId=#{imgId}
+    </select>
+    <!-- 查询 -->
+    <select id="queryCondition" parameterType="int" resultMap="imgMap">
+        select *
+        from tb_img i
+        <where>
+            <if test="img1!=null and img1!=''">
+                and i.img1=#{img1}
+            </if>
+            <if test="img2!=null and img2!=''">
+                and i.img2=#{img2}
+            </if>
+            <if test="img3!=null and img3!=''">
+                and i.img3=#{img3}
+            </if>
+            <if test="img4!=null and img4!=''">
+                and i.img4=#{img4}
+            </if>
+            <if test="img5!=null and img5!=''">
+                and i.img5=#{img5}
+            </if>
+        </where>
+    </select>
+    <insert id="add" parameterType="img">
+        insert into tb_img
+        values (#{imgId},#{img1},#{img2},#{img3},#{img4},#{img5})
+    </insert>
+</mapper>

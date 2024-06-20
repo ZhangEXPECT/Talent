@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.talent.dao.VrDao">
+    <resultMap id="vrMap" type="Vr">
+        <id property="vrId" column="vrId"></id>
+        <result property="houseId" column="houseId"></result>
+        <result property="vrUrl" column="vrUrl"></result>
+        <result property="vrContent" column="vrContent"></result>
+        <result property="img1" column="img1"></result>
+        <result property="img2" column="img2"></result>
+        <result property="img3" column="img3"></result>
+        <result property="img4" column="img4"></result>
+        <result property="img5" column="img5"></result>
+    </resultMap>
+
+    <!-- 添加VR -->
+    <insert id="add" parameterType="Vr">
+        insert into tb_vr
+        values (#{vrId}, #{houseId}, #{vrUrl}, #{vrContent},#{img1},#{img2},#{img3},#{img4},#{img5})
+        <selectKey keyProperty="vrId" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID() AS vrId
+        </selectKey>
+    </insert>
+
+
+    <!-- 删除VR -->
+    <delete id="delete" parameterType="int">
+        delete
+        from tb_vr
+        where vrId = #{vrId}
+    </delete>
+
+    <!-- 动态修改 -->
+    <update id="update" parameterType="Vr">
+        update tb_vr v
+        <set>
+            <if test="vrUrl !=null">
+                v.vrUrl = #{vrUrl},
+            </if>
+            <if test="vrContent !=null">
+                v.vrContent = #{vrContent},
+            </if>
+            <if test="img2 !=null">
+                v.img2 = #{img2},
+            </if>
+            <if test="img3 !=null">
+                v.img3 = #{img3},
+            </if>
+            <if test="img4 !=null">
+                v.img4 = #{img4},
+            </if>
+            <if test="img5 !=null">
+                v.img5 = #{img5},
+            </if>
+        </set>
+        where v.vrId = #{vrId}
+    </update>
+
+
+    <!-- Id查询 -->
+    <select id="queryId" parameterType="int" resultMap="vrMap">
+        select *
+        from tb_vr v
+                RIGHT JOIN tb_house h ON (v.houseId = h.houseId)
+        where v.vrId = #{vrId}
+    </select>
+
+    <!-- 查询房源Vr -->
+    <select id="queryVrBYHouseId" parameterType="int" resultMap="vrMap">
+        select *
+        from tb_house  h
+                 LEFT JOIN tb_vr v ON (v.houseId = h.houseId)
+        where v.houseId = #{houseId}
+    </select>
+
+
+    <!-- 分页 -->
+    <select id="queryBySelectActive" resultMap="vrMap">
+        select * from tb_vr
+        <!-- 分页-->
+        <if test="currentPage != null and pageSize != null">
+            <bind name="start" value="(currentPage - 1) * pageSize"/>
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+
+    <select id="countBySelectActive" resultType="int">
+        select count(1) from tb_vr
+    </select>
+
+
+
+
+</mapper>

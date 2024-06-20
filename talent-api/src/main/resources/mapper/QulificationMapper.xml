@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.talent.dao.QualificationDao">
+    <resultMap id="qualificationMap" type="Qualification">
+        <id property="qualificationId" column="qualificationId"></id>
+        <result property="userId" column="userId"></result>
+        <result property="buildTime" column="buildTime"></result>
+        <result property="status" column="status"></result>
+        <result property="remark" column="remark"></result>
+        <result property="married" column="married"></result>
+        <result property="local" column="local"></result>
+        <result property="school" column="school"></result>
+        <result property="degree" column="degree"></result>
+        <result property="degreeInfo" column="degreeInfo"></result>
+        <result property="major" column="major"></result>
+        <result property="employed" column="employed"></result>
+        <result property="likeArea" column="likeArea"></result>
+        <result property="likeCommunity" column="likeCommunity"></result>
+        <result property="likeType" column="likeType"></result>
+        <result property="companyName" column="companyName"></result>
+        <result property="companyAddress" column="companyAddress"></result>
+        <result property="companyCode" column="companyCode"></result>
+        <result property="companyContact" column="companyContact"></result>
+        <result property="companyPhone" column="companyPhone"></result>
+        <result property="graduateImg" column="graduateImg"></result>
+        <result property="degreeImg" column="degreeImg"></result>
+        <result property="otherImg" column="otherImg"></result>
+
+        <association property="user" column="userId" javaType="User"
+                     resultMap="com.example.talent.dao.UserDao.userMap"></association>
+    </resultMap>
+
+
+    <!-- 添加 -->
+    <insert id="add" parameterType="Qualification">
+        insert into tb_qualification
+        values (#{qualificationId}, #{userId}, #{buildTime}, #{status},#{remark},#{married}
+        ,#{local},#{school},#{degree},#{degreeInfo},#{major},#{employed},#{likeArea},#{likeCommunity}
+        ,#{likeType},#{companyName},#{companyAddress},#{companyCode},#{companyContact},#{companyPhone}
+        ,#{companyPhone},#{graduateImg},#{degreeImg},#{otherImg})
+        <selectKey keyProperty="qualificationId" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+
+    <!-- 删除 -->
+    <delete id="delete" parameterType="int">
+        delete
+        from tb_qualification
+        where qualificationId = #{qualificationId}
+    </delete>
+
+    <!-- 动态修改 -->
+    <update id="update" parameterType="Qualification">
+        update tb_qualification q
+        <set>
+            <if test="status !=null">
+                q.status = #{status},
+            </if>
+            <if test="remark !=null">
+                q.remark = #{remark},
+            </if>
+        </set>
+        where q.qualificationId = #{qualificationId}
+    </update>
+
+
+    <!-- Id查询 -->
+    <select id="queryById" parameterType="int" resultMap="qualificationMap">
+        select *
+        from tb_qualification q
+                 LEFT JOIN tb_user u ON (u.userId = q.userId)
+        where q.qualificationId = #{qualificationId}
+    </select>
+
+    <!-- 用户查询审核 -->
+    <select id="queryQualificationBYUserId" parameterType="int" resultMap="qualificationMap">
+        select q.*,u.*
+        from tb_qualification q
+                 LEFT JOIN tb_user u ON (u.userId = q.userId)
+        where q.userId = #{userId}
+    </select>
+
+    <!-- 用户信息查询审核 -->
+    <select id="queryQualificationBYUser" resultMap="qualificationMap">
+        select *
+        from tb_user u
+        <where>
+            <if test="userId != null">
+                u.userId  like
+                concat('%',#{userId},'%')
+            </if>
+            <if test="userName != null">
+                and u.userName like
+                concat('%',#{userName},'%')
+            </if>
+            <if test="nick != null">
+                and u.nick like
+                concat('%',#{nick},'%')
+            </if>
+            <if test="password != null">
+                and u.password like
+                concat('%',#{password},'%')
+            </if>
+            <if test="phone != null">
+                and u.phone like
+                concat('%',#{phone},'%')
+            </if>
+            <if test="gender != null">
+                and u.gender = #{gender}
+            </if>
+            <if test="IDCard != null">
+                and u.IDCard = #{IDCard}
+            </if>
+            <if test="birthday != null">
+                and u.birthday like
+                concat('%',#{birthday},'%')
+            </if>
+            <if test="realName != null">
+                and u.realName like
+                concat('%',#{realName},'%')
+            </if>
+            <if test="certified != null">
+                and u.certified like
+                concat('%',#{certified},'%')
+            </if>
+        </where>
+        LEFT JOIN tb_qualifaction q ON (u.userId = q.userId)
+    </select>
+
+
+    <!-- 分页 -->
+    <select id="queryBySelectActive" resultMap="qualificationMap">
+        select q.*,u.* from tb_qualification q
+        LEFT JOIN tb_user u ON (q.userId = u.userId)
+        <include refid="selectActive"></include>
+        <!-- 分页-->
+        <if test="currentPage != null and pageSize != null">
+            <bind name="start" value="(currentPage - 1) * pageSize"/>
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+    <select id="countBySelectActive" resultType="int">
+        select count(1) from tb_qualification q
+        LEFT JOIN tb_user u ON (q.userId = u.userId)
+        <include refid="selectActive"></include>
+    </select>
+
+    <sql id="selectActive">
+        <where>
+            <if test="qualificationId != null">
+                q.qualificationId  like
+                concat('%',#{qualificationId},'%')
+            </if>
+            <if test="userId != null">
+                and q.userId like
+                concat('%',#{userId},'%')
+            </if>
+            <if test="buildTime != null">
+                and q.buildTime like
+                concat('%',#{buildTime},'%')
+            </if>
+            <if test="status != null">
+                and q.status like
+                concat('%',#{status},'%')
+            </if>
+            <if test="remark != null">
+                and q.remark like
+                concat('%',#{remark},'%')
+            </if>
+            <if test="local != null">
+                and q.local = #{local}
+            </if>
+            <if test="degree != null">
+                and q.degree = #{degree}
+            </if>
+            <if test="major != null">
+                and q.major like
+                concat('%',#{major},'%')
+            </if>
+            <if test="companyName != null">
+                and q.companyName like
+                concat('%',#{companyName},'%')
+            </if>
+        </where>
+    </sql>
+
+
+</mapper>

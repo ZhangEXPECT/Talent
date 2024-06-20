@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.talent.dao.NewsDao">
+    <resultMap id="newsMap" type="News">
+        <id property="newsId" column="newsId"></id>
+        <result property="title" column="title"></result>
+        <result property="content" column="content"></result>
+        <result property="releaseTime" column="releaseTime"></result>
+        <result property="img1" column="img1"></result>
+        <result property="img2" column="img2"></result>
+        <result property="img3" column="img3"></result>
+    </resultMap>
+
+
+
+    <!-- 添加 -->
+    <insert id="add" parameterType="News">
+        insert into tb_news
+        values (#{newsId}, #{title}, #{content}, #{releaseTime},#{img1},#{img2},#{img3})
+        <selectKey keyProperty="newsId" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID() AS newsId
+        </selectKey>
+    </insert>
+
+
+    <!-- 删除 -->
+    <delete id="delete" parameterType="int">
+        delete
+        from tb_news
+        where newsId = #{newsId}
+    </delete>
+
+
+    <!-- Id查询 -->
+    <select id="queryById" parameterType="int" resultMap="newsMap">
+        select *
+        from tb_news n
+        where n.newsId = #{newsId}
+    </select>
+
+    <!-- 动态模糊查询 -->
+    <sql id="selectActive">
+        <where>
+            <if test="newsId != null">
+                p.newsId = #{newsId}
+            </if>
+            <if test="keyword != null">
+                and (p.title like
+                concat('%',#{keyword},'%')
+                or p.content  like
+                concat('%',#{keyword},'%'))
+            </if>
+            <if test="startTime != null and endTime != null">
+                and p.releaseTime between #{startTime} and #{endTime}
+            </if>
+        </where>
+    </sql>
+
+    <!-- Time范围查询 -->
+    <select id="queryByTime" parameterType="int" resultMap="newsMap">
+        select *
+        from tb_news n
+        where n.releaseTime between #{startTime} and #{endTime}
+    </select>
+
+
+    <!-- 分页 -->
+    <select id="queryBySelectActive" resultMap="newsMap">
+        select * from tb_news p
+        <!-- 分页-->
+        <if test="currentPage != null and pageSize != null">
+            <bind name="start" value="(currentPage - 1) * pageSize"/>
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+
+    <select id="countBySelectActive" resultType="int">
+        select count(1)
+        from tb_news
+    </select>
+</mapper>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.talent.dao.AppointDao">
+    <resultMap id="appointMap" type="Appoint">
+        <id property="appointId" column="appointId"></id>
+        <result property="userId" column="userId"></result>
+        <result property="houseId" column="houseId"></result>
+        <result property="buildTime" column="buildTime"></result>
+        <result property="appointTime" column="appointTime"></result>
+        <result property="status" column="status"></result>
+
+        <association property="user" column="userId" javaType="User"
+                     resultMap="com.example.talent.dao.UserDao.userMap"></association>
+
+        <association property="house" column="house" javaType="House"
+                     resultMap="com.example.talent.dao.HouseDao.houseMap"></association>
+    </resultMap>
+
+
+    <!-- 添加 -->
+    <insert id="add" parameterType="Appoint">
+        insert into tb_appoint
+        values (#{appointId}, #{userId}, #{houseId}, #{buildTime},#{appointTime},#{status})
+        <selectKey keyProperty="appointId" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+
+    <!-- 删除 -->
+    <delete id="delete" parameterType="int">
+        delete
+        from tb_appoint
+        where appointId = #{appointId}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="update" parameterType="Appoint">
+        update tb_appoint a
+        <set>
+            <if test="buildTime !=null">
+                a.buildTime = #{buildTime},
+            </if>
+            <if test="appointTime !=null">
+                a.appointTime = #{appointTime},
+            </if>
+            <if test="status !=null">
+                a.status = #{status},
+            </if>
+        </set>
+        where a.appointId = #{appointId}
+    </update>
+
+    <!-- Id查询 -->
+    <select id="queryById" parameterType="int" resultMap="appointMap">
+        select *
+        from tb_appoint a
+        where a.appointId = #{appointId}
+    </select>
+
+    <!-- UserId查询 -->
+    <select id="queryByUserId" parameterType="int" resultMap="appointMap">
+        select a.*, h.*
+        from tb_appoint a
+                 RIGHT JOIN tb_house h ON (h.houseId = a.houseId)
+        where a.userId = #{userId}
+    </select>
+
+    <!-- HouseId查询 -->
+    <select id="queryByHouseId" parameterType="int" resultType="Integer">
+        select count(*)
+        from tb_appoint a
+                 RIGHT JOIN tb_house h ON (h.houseId = a.houseId)
+        where a.houseId = #{houseId}
+    </select>
+
+    <!-- 状态查询 -->
+    <select id="queryByStatus"  resultMap="appointMap">
+        select a.*,u.*,h.*
+        from tb_appoint a
+        LEFT JOIN tb_user u ON (u.userId = a.userId)
+        RIGHT JOIN tb_house h ON (h.houseId = a.houseId)
+        where a.status like concat('%',#{status},'%')
+        and u.certified = "是"
+        <!-- 分页-->
+        <if test="currentPage != null and pageSize != null">
+            <bind name="start" value="(currentPage - 1) * pageSize"/>
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+    <!-- Time查询 -->
+    <select id="queryByTime" resultMap="appointMap">
+        select *
+        from tb_appoint a
+        where a.appointTime between #{startTime} and #{endTime}
+          and a.buildTime between #{startTime} and #{endTime}
+        <!-- 分页-->
+        <if test="currentPage != null and pageSize != null">
+            <bind name="start" value="(currentPage - 1) * pageSize"/>
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+</mapper>
