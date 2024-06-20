@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "首页",
-  "navigationStyle": "custom",
-  "usingComponents": {}
+  "usingComponents": {
+    "u-notice-bar": "/uview-ui/components/u-notice-bar/u-notice-bar",
+    "u-section": "/uview-ui/components/u-section/u-section"
+  }
 }

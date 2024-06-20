@@ -17,5 +17,6 @@
 	@import "uview-ui/index.scss";
 	@import 'static/iconfont/iconfont.css';
 	@import 'static/css/style.scss';
+	@import 'static/css/base.css';
 </style>
  

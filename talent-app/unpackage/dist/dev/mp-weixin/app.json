@@ -1,16 +1,28 @@
 {
   "pages": [
-    "pages/login/index",
     "pages/tabs/index/index",
+    "pages/tabs/house/index",
+    "pages/tabs/service/index",
     "pages/tabs/user/index",
-    "pages/policy/index"
+    "pages/policy/index",
+    "pages/house/index",
+    "pages/house/search/index",
+    "pages/house/detail/index",
+    "pages/house/application/index",
+    "pages/house/qualification/index",
+    "pages/progress/index",
+    "pages/policy/public/index",
+    "pages/policy/detail/index",
+    "pages/vr/index",
+    "pages/subsidy/index",
+    "pages/house/check/index"
   ],
   "subPackages": [],
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "uni-app",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#FFFFFF"
   },
   "tabBar": {
     "color": "#282828",
@@ -25,6 +37,18 @@
         "text": "首页"
       },
       {
+        "pagePath": "pages/tabs/house/index",
+        "iconPath": "static/images/2-001.png",
+        "selectedIconPath": "static/images/2-002.png",
+        "text": "房源"
+      },
+      {
+        "pagePath": "pages/tabs/service/index",
+        "iconPath": "static/images/3-001.png",
+        "selectedIconPath": "static/images/3-002.png",
+        "text": "服务"
+      },
+      {
         "pagePath": "pages/tabs/user/index",
         "iconPath": "static/images/4-001.png",
         "selectedIconPath": "static/images/4-002.png",
@@ -32,5 +56,14 @@
       }
     ]
   },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "获取您的具体位置，为您推荐附近门店"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseLocation"
+  ],
   "usingComponents": {}
 }

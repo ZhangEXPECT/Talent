@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<view class="title">
-			<text>欢迎进入**</text>
+			<text>欢迎进入人才引进平台</text>
 		</view>
 
 		<view class="tabs">
@@ -17,6 +17,10 @@
 			<view class="input">
 				<u-input type='text' placeholder='验证码'></u-input>
 			</view>
+			
+			
+			<button type="primary" style="width: 100%;height: 90rpx; padding: 25rpx;margin-top: 150rpx;">发送验证码</button>
+			<button type="primary"  style="width: 100%;height: 90rpx; padding: 25rpx;">登录</button>
 
 		</view>
 		<view class="form" v-if="current==1">
@@ -26,6 +30,7 @@
 			<view class="input">
 				<u-input type='password' placeholder='请输入密码' password-icon="true"></u-input>
 			</view>
+				<button type="primary"  style="width: 100%;height: 90rpx; padding: 25rpx;">登录</button>
 		</view>
 	</view>
 </template>
@@ -87,7 +92,7 @@
 		}
 
 		.form {
-			height: 300rpx;
+			height: 400rpx;
 			width: 95%;
 			margin: 0 auto;
 			display: flex;

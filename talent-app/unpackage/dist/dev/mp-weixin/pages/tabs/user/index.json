@@ -1,6 +1,6 @@
 {
   "navigationBarTitleText": "个人中心",
-  "navigationBarBackgroundColor": "#8FB79B",
-  "navigationBarTextStyle": "white",
-  "usingComponents": {}
+  "usingComponents": {
+    "u-section": "/uview-ui/components/u-section/u-section"
+  }
 }
